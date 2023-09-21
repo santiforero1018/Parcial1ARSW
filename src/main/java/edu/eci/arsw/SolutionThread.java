@@ -12,32 +12,42 @@ public class SolutionThread extends Thread {
     private int count;
     private byte[] digits;
     private int calculatedDigits;
-    
-    public SolutionThread(int start, int count, byte[] digits) {
+    private Object key;
+    public SolutionThread(int start, int count, byte[] digits, Object key, String name) {
+        super(name);
         this.start = start;
         this.count = count;
         this.digits = digits;
         this.calculatedDigits = 0;
+        this.key = key;
     }
 
 
     public void run() {
+        
         double sum = 0;
-
-        for (int i = 0; i < count; i++) {
-            if (i % DigitsPerSum == 0) {
-                sum = 4 * sum(1, start)
-                        - 2 * sum(4, start)
-                        - sum(5, start)
-                        - sum(6, start);
-
-                start += DigitsPerSum;
+        try {
+            
+            for (int i = 0; i < count; i++) {
+                Thread.sleep(2000);
+                if (i % DigitsPerSum == 0) {
+                    sum = 4 * sum(1, start)
+                            - 2 * sum(4, start)
+                            - sum(5, start)
+                            - sum(6, start);
+    
+                    start += DigitsPerSum;
+                }
+    
+                sum = 16 * (sum - Math.floor(sum));
+                this.digits[i] = (byte) sum;
+                this.calculatedDigits++;
             }
-
-            sum = 16 * (sum - Math.floor(sum));
-            this.digits[i] = (byte) sum;
-            this.calculatedDigits++;
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        
     }
     
     /// <summary>
@@ -105,5 +115,17 @@ public class SolutionThread extends Thread {
 
     public int getCurrentCalculatedDigits(){
         return this.calculatedDigits;
+    }
+
+    
+    public void pause(){
+        synchronized(key){
+            try {
+                key.wait();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }

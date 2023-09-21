@@ -5,7 +5,7 @@
  */
 package edu.eci.arsw.math;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,9 +14,18 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String a[]) {
-        System.out.println(bytesToHex(PiDigits.getDigits(0, 10, 8)));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 100, 8)));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000, 50)));
+        ArrayList<?> key = new ArrayList<>();
+        System.out.println(bytesToHex(PiDigits.getDigits(0, 10, 8, key, "hilos 1")));
+        System.out.println(bytesToHex(PiDigits.getDigits(1, 100, 8, key, "hilos 2")));
+        System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000, 50, key, "hilos 3")));
+
+        // while(true){
+        //     Long targetTime = System.currentTimeMillis()+ 5000;
+        //     if(System.currentTimeMillis() == targetTime){
+        //         PiDigits.sayStop();
+                
+        //     }
+        // }
         
     }
 
