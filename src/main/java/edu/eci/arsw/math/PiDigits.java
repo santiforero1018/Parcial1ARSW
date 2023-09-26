@@ -1,7 +1,5 @@
 package edu.eci.arsw.math;
 
-import edu.eci.arsw.SolutionThread;
-
 ///  <summary>
 ///  An implementation of the Bailey-Borwein-Plouffe formula for calculating hexadecimal
 ///  digits of pi.
@@ -31,20 +29,21 @@ public class PiDigits {
                 throw new RuntimeException("Invalid Interval");
             }
             byte[] digits = new byte[count];
-            int division = count / N;
+            int division = count / N;   
             threads = new SolutionThread[N];
 
             int countter = 1;
             for (int i = 0; i < N; i++) {
                 int aux = i * division;
+                countter++;
                 int auxEnd = (i == N - 1) ? (count) : (aux + division);
                 threads[i] = new SolutionThread(aux, auxEnd, digits, lock, name);
                 threads[i].start();
             }
 
-            for (int i = 0; i < N; i++) {
+            for (SolutionThread thread: threads) {
                 try {
-                    threads[i].join();
+                    thread.join();
                 } catch (InterruptedException e) {
                     // TODO: handle exception
                     e.printStackTrace();

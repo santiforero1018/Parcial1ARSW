@@ -15,9 +15,10 @@ public class Main {
 
     public static void main(String a[]) {
         ArrayList<?> key = new ArrayList<>();
-        System.out.println(bytesToHex(PiDigits.getDigits(0, 10, 8, key, "hilos 1")));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 100, 8, key, "hilos 2")));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000, 50, key, "hilos 3")));
+        System.out.println(bytesToHex(PiDigits.getDigits(1, 10, 8, key, "hilos 1")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(51, 100, 8, key, "hilos 2")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(100, 1000, 50, key, "hilos 3")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(1001, 1000000, 50, key, "hilos 4")));
 
         // while(true){
         //     Long targetTime = System.currentTimeMillis()+ 5000;

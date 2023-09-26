@@ -1,4 +1,4 @@
-package edu.eci.arsw;
+package edu.eci.arsw.math;
 
 /**
  * Thread solución del parcial
@@ -26,10 +26,10 @@ public class SolutionThread extends Thread {
     public void run() {
         
         double sum = 0;
-        try {
+        
             
             for (int i = 0; i < count; i++) {
-                Thread.sleep(2000);
+                
                 if (i % DigitsPerSum == 0) {
                     sum = 4 * sum(1, start)
                             - 2 * sum(4, start)
@@ -43,10 +43,6 @@ public class SolutionThread extends Thread {
                 this.digits[i] = (byte) sum;
                 this.calculatedDigits++;
             }
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
     }
     
