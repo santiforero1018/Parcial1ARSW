@@ -8,8 +8,9 @@ package edu.eci.arsw.math;
 ///  </summary>
 public class PiDigits {
 
-    private static boolean stop = false;
+    // private static boolean stop = false;
     private static SolutionThread[] threads;
+    private static byte[] digits;
 
     /**
      * Returns a range of hexadecimal digits of pi.
@@ -19,7 +20,7 @@ public class PiDigits {
      * @param N     the number of threads to do the operation.
      * @return An array containing the hexadecimal digits.
      */
-    public static byte[] getDigits(int start, int count, int N, Object lock, String name) {
+    public static byte[] getDigits(int start, int count, int N, String name) {
         while (true) {
             if (start < 0) {
                 throw new RuntimeException("Invalid Interval");
@@ -28,20 +29,20 @@ public class PiDigits {
             if (count < 0) {
                 throw new RuntimeException("Invalid Interval");
             }
-            byte[] digits = new byte[count];
-            int division = count / N;   
+            digits = new byte[count];
+            int division = count / N;
             threads = new SolutionThread[N];
 
-            int countter = 1;
+            // int countter = 1;
             for (int i = 0; i < N; i++) {
                 int aux = i * division;
-                countter++;
+                // countter++;
                 int auxEnd = (i == N - 1) ? (count) : (aux + division);
-                threads[i] = new SolutionThread(aux, auxEnd, digits, lock, name);
+                threads[i] = new SolutionThread(aux, auxEnd, digits, name);
                 threads[i].start();
             }
 
-            for (SolutionThread thread: threads) {
+            for (SolutionThread thread : threads) {
                 try {
                     thread.join();
                 } catch (InterruptedException e) {
@@ -57,10 +58,26 @@ public class PiDigits {
 
     }
 
-    public static void sayStop(){
-        for(int i = 0; i< threads.length; i++){
-            System.out.println(threads[i].getCurrentCalculatedDigits());
-            threads[i].pause();
+    public static void sayStop() {
+        synchronized (digits) {
+            try {
+                for(int i=0;i<threads.length;i++){
+                    System.out.println(threads[i].getName() + " current digit of "+ i + " " +threads[i].getCurrentCalculatedDigits());
+                }
+                digits.wait();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static void continuar(){
+        synchronized(digits){
+            digits.notifyAll();
         }
     }
+
+     
 }

@@ -2,6 +2,7 @@ package edu.eci.arsw.math;
 
 /**
  * Thread solución del parcial
+ * 
  * @author Santiago Forero Yate, ARSW
  */
 public class SolutionThread extends Thread {
@@ -9,43 +10,55 @@ public class SolutionThread extends Thread {
     private static int DigitsPerSum = 8;
     private static double Epsilon = 1e-17;
     private int start;
-    private int count;
+    private int end;
     private byte[] digits;
+    private byte[] temp;
     private int calculatedDigits;
-    private Object key;
-    public SolutionThread(int start, int count, byte[] digits, Object key, String name) {
+
+    public SolutionThread(int start, int end, byte[] digits, String name) {
         super(name);
         this.start = start;
-        this.count = count;
+        this.end = end;
         this.digits = digits;
         this.calculatedDigits = 0;
-        this.key = key;
+        this.temp = new byte[end - start];
     }
-
 
     public void run() {
-        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         double sum = 0;
-        
-            
-            for (int i = 0; i < count; i++) {
-                
-                if (i % DigitsPerSum == 0) {
-                    sum = 4 * sum(1, start)
-                            - 2 * sum(4, start)
-                            - sum(5, start)
-                            - sum(6, start);
-    
-                    start += DigitsPerSum;
-                }
-    
-                sum = 16 * (sum - Math.floor(sum));
-                this.digits[i] = (byte) sum;
-                this.calculatedDigits++;
+
+        int current = this.start;
+
+        for (int i = 0; i < end - start; i++) {
+
+            if (i % DigitsPerSum == 0) {
+                sum = 4 * sum(1, current)
+                        - 2 * sum(4, current)
+                        - sum(5, current)
+                        - sum(6, current);
+
+                current += DigitsPerSum;
             }
-        
+
+            sum = 16 * (sum - Math.floor(sum));
+            this.temp[i] = (byte) sum;
+            this.calculatedDigits++;
+        }
+
+        synchronized (digits) {
+            for (int i = 0; i < end - start; i++) {
+                this.digits[start + i] = this.temp[i];
+            }
+        }
+
     }
-    
+
     /// <summary>
     /// Returns the sum of 16^(n - k)/(8 * k + m) from 0 to k.
     /// </summary>
@@ -77,7 +90,7 @@ public class SolutionThread extends Thread {
         return sum;
     }
 
-     /// <summary>
+    /// <summary>
     /// Return 16^p mod m.
     /// </summary>
     /// <param name="p"></param>
@@ -109,15 +122,14 @@ public class SolutionThread extends Thread {
         return result;
     }
 
-    public int getCurrentCalculatedDigits(){
+    public int getCurrentCalculatedDigits() {
         return this.calculatedDigits;
     }
 
-    
-    public void pause(){
-        synchronized(key){
+    public void pause() {
+        synchronized (digits) {
             try {
-                key.wait();
+                digits.wait();
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
