@@ -21,63 +21,46 @@ public class PiDigits {
      * @return An array containing the hexadecimal digits.
      */
     public static byte[] getDigits(int start, int count, int N, String name) {
-        while (true) {
-            if (start < 0) {
-                throw new RuntimeException("Invalid Interval");
-            }
-
-            if (count < 0) {
-                throw new RuntimeException("Invalid Interval");
-            }
-            digits = new byte[count];
-            int division = count / N;
-            threads = new SolutionThread[N];
-
-            // int countter = 1;
-            for (int i = 0; i < N; i++) {
-                int aux = i * division;
-                // countter++;
-                int auxEnd = (i == N - 1) ? (count) : (aux + division);
-                threads[i] = new SolutionThread(aux, auxEnd, digits, name);
-                threads[i].start();
-            }
-
-            for (SolutionThread thread : threads) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
-
-            }
-
-            return digits;
-
+        if (start < 0) {
+            throw new RuntimeException("Invalid Interval");
         }
 
-    }
+        if (count < 0) {
+            throw new RuntimeException("Invalid Interval");
+        }
+        digits = new byte[count];
+        int division = count / N;
+        threads = new SolutionThread[N];
 
-    public static void sayStop() {
-        synchronized (digits) {
+        // int countter = 1;
+        for (int i = 0; i < N; i++) {
+            int aux = i * division;
+            // countter++;
+            int auxEnd = (i == N - 1) ? (count) : (aux + division);
+            threads[i] = new SolutionThread(aux, auxEnd, digits, name + i);
+            threads[i].start();
+        }
+
+        for (SolutionThread thread : threads) {
             try {
-                for(int i=0;i<threads.length;i++){
-                    System.out.println(threads[i].getName() + " current digit of "+ i + " " +threads[i].getCurrentCalculatedDigits());
-                }
-                digits.wait();
+                thread.join();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
+                // TODO: handle exception
                 e.printStackTrace();
             }
+
         }
+
+        return digits;
 
     }
 
-    public static void continuar(){
-        synchronized(digits){
-            digits.notifyAll();
+    public static synchronized void continuar() {
+        synchronized (digits) {
+            for (SolutionThread thread : threads) {
+                thread.setStop(false);
+            }
+            digits.notifyAll(); 
         }
     }
-
-     
 }

@@ -14,6 +14,7 @@ public class SolutionThread extends Thread {
     private byte[] digits;
     private byte[] temp;
     private int calculatedDigits;
+    private boolean isStop;
 
     public SolutionThread(int start, int end, byte[] digits, String name) {
         super(name);
@@ -25,15 +26,12 @@ public class SolutionThread extends Thread {
     }
 
     public void run() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
         double sum = 0;
 
         int current = this.start;
+
+        long targetTime = System.currentTimeMillis() + 5000;
 
         for (int i = 0; i < end - start; i++) {
 
@@ -49,6 +47,23 @@ public class SolutionThread extends Thread {
             sum = 16 * (sum - Math.floor(sum));
             this.temp[i] = (byte) sum;
             this.calculatedDigits++;
+
+            if (System.currentTimeMillis() >= targetTime) {
+                synchronized (this) {
+                    this.isStop = true;
+                    try {
+                        System.out.println(this.getCurrentCalculatedDigits() + " For thread " + this.getName());
+                        while (this.isStop)
+                            this.wait();
+                        targetTime = System.currentTimeMillis() + 5000;
+                    } catch (InterruptedException e) {
+
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
         }
 
         synchronized (digits) {
@@ -126,14 +141,14 @@ public class SolutionThread extends Thread {
         return this.calculatedDigits;
     }
 
-    public void pause() {
+    public void setStop(boolean stop) {
+        this.isStop = stop;
+    }
+
+    public void resumeEjecution() {
         synchronized (digits) {
-            try {
-                digits.wait();
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            digits.notifyAll();
         }
     }
+
 }

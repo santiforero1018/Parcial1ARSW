@@ -6,7 +6,6 @@
 package edu.eci.arsw.math;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -18,31 +17,26 @@ public class Main {
 
     public static void main(String a[]) {
 
-        // System.out.println(bytesToHex(PiDigits.getDigits(1, 10, 8, "hilos 1")));
-        System.out.println(bytesToHex(PiDigits.getDigits(101, 1000, 25, "hilos 2")));
-        // System.out.println(bytesToHex(PiDigits.getDigits(1001, 10000, 50, "hilos 3")));
-        // System.out.println(bytesToHex(PiDigits.getDigits(10001, 100000, 65, "hilos 4")));
-        // System.out.println(bytesToHex(PiDigits.getDigits(100001, 1000000, 70, "hilos 5")));
-        // System.out.println(bytesToHex(PiDigits.getDigits(1001, 1000000, 50, "hilos 4")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(0, 10, 8, "hilos 1")));
+        // // System.out.println(bytesToHex(PiDigits.getDigits(1, 100, 8, "hilos pr")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(101, 1000, 25, "hilos 2")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(1001, 10000, 50, "hilos
+        // 3")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(10001, 100000, 65, "hilos
+        // 4")));
+        // System.out.println(bytesToHex(PiDigits.getDigits(100001, 1000000, 70, "hilos
+        // 5")));
+        System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000, 6, "hilo ")));
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         while (true) {
             try {
-                
                 Thread.sleep(5000);
-            } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-
-            PiDigits.sayStop();
-
-            System.out.println("Presione Enter para continuar...");
-            try {
+                System.out.println("Presione Enter para continuar...");
                 br.readLine();
                 PiDigits.continuar();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
