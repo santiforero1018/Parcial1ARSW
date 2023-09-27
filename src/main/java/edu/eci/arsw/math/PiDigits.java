@@ -55,11 +55,22 @@ public class PiDigits {
 
     }
 
-    public static synchronized void continuar() {
-        synchronized (digits) {
-            for (SolutionThread thread : threads) {
-                thread.setStop(false);
+    public static void espere(){
+        synchronized(digits){
+            try {
+                for(SolutionThread thread:threads){
+                    System.out.println(thread.getCurrentCalculatedDigits() + " For Thread  "+ thread.getName());
+                }
+                digits.wait();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+        }
+    }
+
+    public static synchronized void continuar() {
+        synchronized (digits){
             digits.notifyAll(); 
         }
     }

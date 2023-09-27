@@ -14,8 +14,7 @@ public class SolutionThread extends Thread {
     private byte[] digits;
     private byte[] temp;
     private int calculatedDigits;
-    private boolean isStop;
-
+    
     public SolutionThread(int start, int end, byte[] digits, String name) {
         super(name);
         this.start = start;
@@ -31,8 +30,6 @@ public class SolutionThread extends Thread {
 
         int current = this.start;
 
-        long targetTime = System.currentTimeMillis() + 5000;
-
         for (int i = 0; i < end - start; i++) {
 
             if (i % DigitsPerSum == 0) {
@@ -47,22 +44,6 @@ public class SolutionThread extends Thread {
             sum = 16 * (sum - Math.floor(sum));
             this.temp[i] = (byte) sum;
             this.calculatedDigits++;
-
-            if (System.currentTimeMillis() >= targetTime) {
-                synchronized (this) {
-                    this.isStop = true;
-                    try {
-                        System.out.println(this.getCurrentCalculatedDigits() + " For thread " + this.getName());
-                        while (this.isStop)
-                            this.wait();
-                        targetTime = System.currentTimeMillis() + 5000;
-                    } catch (InterruptedException e) {
-
-                        e.printStackTrace();
-                    }
-
-                }
-            }
 
         }
 
@@ -139,16 +120,6 @@ public class SolutionThread extends Thread {
 
     public int getCurrentCalculatedDigits() {
         return this.calculatedDigits;
-    }
-
-    public void setStop(boolean stop) {
-        this.isStop = stop;
-    }
-
-    public void resumeEjecution() {
-        synchronized (digits) {
-            digits.notifyAll();
-        }
     }
 
 }

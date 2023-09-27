@@ -32,6 +32,7 @@ public class Main {
         while (true) {
             try {
                 Thread.sleep(5000);
+                PiDigits.espere();
                 System.out.println("Presione Enter para continuar...");
                 br.readLine();
                 PiDigits.continuar();
